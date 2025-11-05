@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 // 리포지터리에서 반환한 값이 optional
@@ -20,34 +21,50 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    //Create
-    @Transactional
-    public void createUser(UserCreateRequest userCreateRequest, String id) {
-        String name = userCreateRequest.name();
-        String mbti = userCreateRequest.mbti();
-
-        UserEntity userEntity = new UserEntity(id,name,mbti);
-        userRepository.save(userEntity);
+    //DB 내부 키 찾는 함수
+    @Transactional(readOnly = true)
+    public Long getUserIdByPublicId(String publicId) {
+        Optional<UserEntity> userEntity = userRepository.findByPublicId(publicId);
+        if (userEntity.isPresent()) {
+            return userEntity.get().getId();
+        }
+        else  {
+            throw new DataNotFoundException("User not found");
+        }
     }
 
-    //Read
+    //Create
+    @Transactional
+    public String createUser(UserCreateRequest userCreateRequest) {
+        String nickname = userCreateRequest.nickname();
+        String mbti = userCreateRequest.mbti();
+
+        String publicId = UUID.randomUUID().toString(); //공개 키 생성
+
+        UserEntity userEntity = new UserEntity(publicId, nickname,mbti);
+        userRepository.save(userEntity);
+
+        return publicId;
+    }
+
+    // Read
+    // 공개 키로 읽기
     @Transactional(readOnly = true)
-    public UserResponse getUserById(String id){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
+    public UserResponse getUserByPublicId(String publicId){
+        Optional<UserEntity> userEntity = userRepository.findByPublicId(publicId);
         if(userEntity.isPresent()){
             UserEntity ue1 = userEntity.get();
-            UserResponse u1 = new UserResponse(ue1.getName(),ue1.getMbti());
-            return u1;
+            return new UserResponse(ue1.getNickname(),ue1.getMbti());
         }
         else throw new DataNotFoundException("User not found");
     }
 
     //NOTE AI 테스트
-    public String getUserNameById(String id){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
+    @Transactional(readOnly = true)
+    public String getUserNicknameByPublicId(String PublicId){
+        Optional<UserEntity> userEntity = userRepository.findByPublicId(PublicId);
         if(userEntity.isPresent()){
-            UserEntity ue1 = userEntity.get();
-            return ue1.getName();
+            return userEntity.get().getNickname();
         }
         else throw new DataNotFoundException("User not found");
     }

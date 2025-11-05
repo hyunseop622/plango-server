@@ -17,15 +17,14 @@ public class UserController {
     // 임의 키 부여 -> DB 저장 -> 키 리턴
     // 유저 저장
     @PostMapping("/custom")
-    public String register(@RequestBody UserCreateRequest userCreateRequest) {
-        String id = userCreateRequest.name() + "1";
-        userService.createUser(userCreateRequest, id);
-        return id;
+    public String registerUser(@RequestBody UserCreateRequest userCreateRequest) {
+        String publicId = userService.createUser(userCreateRequest);
+        return publicId;
     }
 
     // 유저 불러오기
-    @GetMapping("/{id}")
-    public UserResponse get(@PathVariable String id) {
-        return userService.getUserById(id);
+    @GetMapping("/{publicId}")
+    public UserResponse getUser(@PathVariable String publicId) {
+        return userService.getUserByPublicId(publicId);
     }
 }

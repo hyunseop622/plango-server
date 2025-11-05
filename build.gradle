@@ -23,10 +23,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2' // 테스트용 h2
-	runtimeOnly 'com.mysql:mysql-connector-j' // mysql
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //flyway 와 sql 설정
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql:11.7.2'
+    implementation 'com.mysql:mysql-connector-j'
 
     //AI 관련
     implementation 'org.springframework.ai:spring-ai-starter-model-google-genai:1.1.0-M3'

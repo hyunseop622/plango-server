@@ -1,6 +1,5 @@
 package com.plango.server.ai;
 
-import com.plango.server.ai.dto.AiHelloMapper;
 import com.plango.server.ai.dto.AiHelloRequest;
 import com.plango.server.ai.dto.AiHelloResponse;
 import com.plango.server.user.UserService;
@@ -25,17 +24,17 @@ public class AiService {
         this.chat = chatClientBuilder.build();
     }
 
-    public String generateGreeting(String id){
+    public String generateGreeting(String publicId){
         //이름 가져오기
-        String name = userService.getUserNameById(id);
+        String nickname = userService.getUserNicknameByPublicId(publicId);
 
         //매퍼 (내부에서 유저 ID로 ai 요청 DTO 만들고, 해당 DTO를 json으로 빼기
-        AiHelloRequest req = aiHelloMapper.buildAiHelloRequest(name);
+        AiHelloRequest req = aiHelloMapper.buildAiHelloRequest(nickname);
         String userJson = aiHelloMapper.buildUserJson(req);
 
         AiHelloResponse ai = chat
                 .prompt()
-                .system(aiHelloMapper.systemPrompt()) //항상 지켜야 할 규칙 대입
+                .system(aiHelloMapper.systemPromptJoke()) //항상 지켜야 할 규칙 대입
                 .user(userJson) // 추가적인 요청사항
                 .options(ChatOptions.builder().temperature(0.4).build())
                 .call()
