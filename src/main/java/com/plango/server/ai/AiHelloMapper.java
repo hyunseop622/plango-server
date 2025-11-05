@@ -44,7 +44,7 @@ public class AiHelloMapper {
             - 다음에 올 user 역할 메시지는 입력 JSON입니다: 
             { "nickname": String, "addJoke": Boolean }
             - msg: nickname을 포함한 한국어 공손/친근 인사 한 문장.
-            - addJoke가 true면 joke에 짧은 농담 한 문장, false면 빈 문자열("").
+            - addJoke가 true면 joke에 랜덤한 상식 혹은 농담 한 문장, false면 빈 문자열("").
             - 다른 텍스트/마크다운/설명 금지.
         """;
     }

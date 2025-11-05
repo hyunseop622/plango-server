@@ -36,7 +36,7 @@ public class AiService {
                 .prompt()
                 .system(aiHelloMapper.systemPromptJoke()) //항상 지켜야 할 규칙 대입
                 .user(userJson) // 추가적인 요청사항
-                .options(ChatOptions.builder().temperature(0.4).build())
+                .options(ChatOptions.builder().temperature(0.6).build())
                 .call()
                 .entity(AiHelloResponse.class); // ← {"msg":"..."} 를 AiResponse로 매핑
 

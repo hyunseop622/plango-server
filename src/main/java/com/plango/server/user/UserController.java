@@ -20,7 +20,7 @@ public class UserController {
     @PostMapping("/custom")
     public UserCreateResponse registerUser(@RequestBody UserCreateRequest req) {
         String publicId = userService.createUser(req);
-        return new UserCreateResponse(req.nickname(), req.mbti(), publicId);
+        return new UserCreateResponse(publicId,req.nickname(),req.mbti());
     }
 
     // 유저 불러오기
