@@ -19,6 +19,7 @@ CREATE TABLE `travel` (
                           `travel_theme1`   VARCHAR(20) NOT NULL,
                           `travel_theme2`   VARCHAR(20) NOT NULL,
                           `travel_theme3`   VARCHAR(20) NOT NULL,
+                          `created_date` DATE NOT NULL DEFAULT (CURRENT_DATE),
                           PRIMARY KEY (`travel_id`),
                           KEY `idx_travel_user_id` (`user_id`),
                           CONSTRAINT `fk_travel_user`

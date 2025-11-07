@@ -22,14 +22,21 @@ public class TravelController {
     }
 
     //모든 여행 간략하게 보여주기
-    @GetMapping("/read/{publicId}")
-    public List<TravelSummaryResponse> readAllTravel(@PathVariable String publicId) {
-        return travelService.readAllTravel(publicId);
+    //앞으로 다가올 여행
+    @GetMapping("/read/upcoming/{publicId}")
+    public List<TravelSummaryResponse> readAllUpcomingTravel(@PathVariable String publicId) {
+        return travelService.readAllUpcomingTravel(publicId);
+    }
+
+    //이미 지난 여행
+    @GetMapping("/read/finished/{publicId}")
+    public List<TravelSummaryResponse> readAllFinishedTravel(@PathVariable String publicId) {
+        return travelService.readAllFinishedTravel(publicId);
     }
 
     //특정 여행 정보 자세하게 보여주기
-//    @GetMapping("/read/{travelId}")
-//    public TravelDetailResponse readTravelDetail(@RequestParam String travelId) {
-//        return travelService.readTravelDetial(travelId);
-//    }
+    @GetMapping("/read/{travelId}")
+    public TravelDetailResponse readTravelDetail(@PathVariable String travelId) {
+        return travelService.readTravelDetail(travelId);
+    }
 }

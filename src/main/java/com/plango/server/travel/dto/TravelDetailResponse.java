@@ -3,7 +3,7 @@ package com.plango.server.travel.dto;
 import java.util.List;
 
 public record TravelDetailResponse(
-        String travelId, // 여행 순번
+        Long travelId, // 여행 순번
         String userPublicId, // 사용자 id
         TravelType travelType,
         String travelDest,

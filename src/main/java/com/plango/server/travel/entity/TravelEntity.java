@@ -5,6 +5,11 @@ import com.plango.server.travel.dto.TravelType;
 import com.plango.server.user.UserEntity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.*;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.ListIndexBase;
 
 @Entity
 @Table(name = "travel")
@@ -37,14 +42,25 @@ public class TravelEntity {
     @Column(name = "companion_type", nullable = false)
     private CompanionType companionType;
 
-    @Column(name = "travel_theme1", length = 20)
+    @Column(name = "travel_theme1", length = 20,  nullable = false)
     private String travelTheme1;
 
-    @Column(name = "travel_theme2", length = 20)
+    @Column(name = "travel_theme2", length = 20,  nullable = false)
     private String travelTheme2;
 
-    @Column(name = "travel_theme3", length = 20)
+    @Column(name = "travel_theme3", length = 20,  nullable = false)
     private String travelTheme3;
+
+    @Generated(GenerationTime.INSERT)
+    @ColumnDefault("CURRENT_DATE")
+    @Column(name = "created_date", nullable = false, updatable = false, insertable = false)
+    private LocalDate createdDate;
+
+    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("travelDayIndex ASC")
+    @OrderColumn(name = "travel_day_index")
+    @ListIndexBase(1)
+    private List<TravelDayEntity> travelDays = new ArrayList<TravelDayEntity>();
 
     // 기본 생성자
     protected TravelEntity() {
@@ -102,5 +118,13 @@ public class TravelEntity {
 
     public String getTravelTheme3() {
         return travelTheme3;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public List<TravelDayEntity> getTravelDays() {
+        return travelDays;
     }
 }

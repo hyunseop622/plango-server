@@ -1,17 +1,13 @@
 package com.plango.server.ai;
 
-import com.plango.server.ai.dto.AiHelloRequest;
-import com.plango.server.ai.dto.AiHelloResponse;
-import com.plango.server.ai.dto.AiTravelRequest;
-import com.plango.server.ai.dto.AiTravelResponse;
-import com.plango.server.ai.mapper.AiHelloMapper;
-import com.plango.server.ai.mapper.AiTravelMapper;
-import com.plango.server.travel.dto.TravelCreateRequest;
-import com.plango.server.travel.dto.TravelDetailResponse;
+import com.plango.server.ai.dto.*;
+import com.plango.server.ai.mapper.*;
+import com.plango.server.travel.dto.*;
 import com.plango.server.user.UserService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 @Service
 public class AiService {
@@ -55,7 +51,7 @@ public class AiService {
     }
 
     //NOTE AI 여행 계획 리턴
-    public AiTravelResponse generateTravel(TravelCreateRequest req) {
+    public List<TravelDetailResponse.Days> generateTravel(TravelCreateRequest req) {
         //여행 요청 데이터 가공
         String userMbti = userService.getUserMbtiByPublicId(req.userPublicId());
         AiTravelRequest aiTravelRequest = aiTravelMapper.translateAi(req, userMbti);
@@ -68,7 +64,49 @@ public class AiService {
                 .call()
                 .entity(AiTravelResponse.class);
 
-        System.out.println(detail);
-        return detail;
+        //응답을 깔끔하게 traveldetailresponse.day로 바꾸기
+        // 추가되는 것은
+        return normalize(detail);
+    }
+
+    //NOTE AI 응답 정규화
+    public List<TravelDetailResponse.Days> normalize(AiTravelResponse res) {
+        int count = res.days().size(); //총 몇일 짜리 인가..
+        // 일자 먼저 생성
+        List<AiTravelResponse.AiDay> src = res.days();
+        List<TravelDetailResponse.Days> out = new ArrayList<>(count);
+
+        int dayIndex = 1; //일수 정규화
+        for(int i = 0 ; i < count ; i++){
+            List<AiTravelResponse.AiCourse>  srcCourse = src.get(i).courses();
+            List<TravelDetailResponse.Course> outCourse = new ArrayList<>();
+
+            for(AiTravelResponse.AiCourse course : srcCourse){
+
+                Integer order = course.order();
+                String locationName = course.locationName();
+                Double lat = course.lat();
+                Double lng = course.lng();
+                String note = course.note();
+                String theme = course.theme();
+                Integer howLong = course.howLong();
+
+                outCourse.add(new TravelDetailResponse.Course(
+                        order,
+                        locationName,
+                        lat,
+                        lng,
+                        note,
+                        theme,
+                        howLong
+                ));
+            }
+            out.add(new TravelDetailResponse.Days(
+                    dayIndex++,
+                    outCourse
+            ));
+        }
+
+        return out;
     }
 }
