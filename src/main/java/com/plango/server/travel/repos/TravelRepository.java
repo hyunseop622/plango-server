@@ -1,4 +1,4 @@
-package com.plango.server.travel;
+package com.plango.server.travel.repos;
 
 import com.plango.server.travel.entity.TravelEntity;
 import com.plango.server.user.UserEntity;

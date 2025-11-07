@@ -8,6 +8,6 @@ public record AiTravelRequest(
         String theme1,
         String theme2,
         String theme3,
-        String companionType,
-        String userMbti
+        String userMbti,
+        String companionType
 ){}

@@ -2,8 +2,10 @@ package com.plango.server.travel;
 
 import com.plango.server.ai.AiService;
 import com.plango.server.travel.dto.TravelCreateRequest;
+import com.plango.server.travel.dto.TravelDetailResponse;
 import com.plango.server.travel.dto.TravelSummaryResponse;
 import com.plango.server.travel.entity.TravelEntity;
+import com.plango.server.travel.repos.TravelRepository;
 import com.plango.server.user.UserEntity;
 import com.plango.server.user.UserService;
 import jakarta.transaction.Transactional;
@@ -19,31 +21,31 @@ public class TravelService {
     private final UserService userService;
     private final AiService aiService;
 
-    public TravelService(TravelRepository travelRepository,
-                         AiService aiService, UserService userService) {
+    public TravelService(TravelRepository travelRepository, AiService aiService, UserService userService) {
         this.travelRepository = travelRepository;
         this.aiService = aiService;
         this.userService = userService;
     }
 
-    // DB 저장 후 -> 해당 정보를 ai 인데
-    // NOTE DB 저장만 하는 것을 일단 구현 -> 그냥 단순 문자열 리턴
+    // AI 선 처리 후 DB  저장
     // Create
     @Transactional
-    public String createTravel(@RequestBody TravelCreateRequest req) {
+    public TravelDetailResponse createTravel(TravelCreateRequest req) {
+        //AI 응답 (여행 요청 + MBTI)
         String publicId = req.userPublicId();
-        // 유저 찾기
+        String userMbti = userService.getUserMbtiByPublicId(publicId);
+        TravelDetailResponse details = aiService.generateTravelDetail(req);
+
+        // DB 저장
         UserEntity ue = userService.getUserEntityByPublicId(publicId);
-        //목적지 추출
         String travelDest = req.travelDest();
-        //Date 형태 변환
         LocalDate start = LocalDate.parse(req.startDate());
         LocalDate end = LocalDate.parse(req.endDate());
-        // 테마 추출
         List<String> themes = req.themes();
         String theme1 = themes.get(0);
         String theme2 = themes.get(1);
         String theme3 = themes.get(2);
+
 
         TravelEntity travelEntity = new TravelEntity(
                 ue, travelDest, start,end,
@@ -53,7 +55,7 @@ public class TravelService {
 
         travelRepository.saveAndFlush(travelEntity);
 
-        return "완료";
+        return details;
     }
 
     //Read 모든 여행

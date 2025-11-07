@@ -77,4 +77,14 @@ public class UserService {
         }
         else throw new DataNotFoundException("User not found");
     }
+
+    //NOTE 여행 저장 시, 유저의 MBTI 반환
+    @Transactional(readOnly = true)
+    public String getUserMbtiByPublicId(String publicId){
+        Optional<UserEntity> userEntity = userRepository.findByPublicId(publicId);
+        if(userEntity.isPresent()){
+            return userEntity.get().getMbti();
+        }
+        else throw new DataNotFoundException("User not found");
+    }
 }

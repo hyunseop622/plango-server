@@ -1,7 +1,6 @@
-package com.plango.server.ai;
+package com.plango.server.ai.mapper;
 
 import com.plango.server.ai.dto.AiHelloRequest;
-import com.plango.server.ai.dto.AiHelloResponse;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,7 +30,7 @@ public class AiHelloMapper {
             String pretty = om.writerWithDefaultPrettyPrinter().writeValueAsString(aiRequest);
             System.out.println(pretty);
             return om.writeValueAsString(aiRequest);
-        } catch (Exception e) { throw new IllegalArgumentException(e); }
+        } catch (Exception e) { throw new RuntimeException(e); }
     }
 
     public String systemPromptJoke() {

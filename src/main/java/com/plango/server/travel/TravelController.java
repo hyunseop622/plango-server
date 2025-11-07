@@ -17,7 +17,7 @@ public class TravelController {
 
     //여행 생성 요청
     @PostMapping("/create")
-    public String createTravel(@RequestBody TravelCreateRequest req) {
+    public TravelDetailResponse createTravel(@RequestBody TravelCreateRequest req) {
         return travelService.createTravel(req);
     }
 
