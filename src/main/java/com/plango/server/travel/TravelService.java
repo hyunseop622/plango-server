@@ -78,7 +78,27 @@ public class TravelService {
         LocalDate today = LocalDate.now(java.time.ZoneId.of("Asia/Seoul"));
         UserEntity ue = userService.getUserEntityByPublicId(publicId);
         List<TravelEntity> travels =
-                travelRepository.findByUserAndTravelEndBeforeOrderByTravelStartDesc(ue,today);
+                travelRepository.findByUserAndTravelEndBeforeOrderByTravelEndDesc(ue,today);
+
+        return travels.stream()
+                .map(t -> new TravelSummaryResponse(
+                        t.getTravelId(),
+                        t.getTravelType(),
+                        t.getTravelDest(),
+                        t.getTravelStart().toString(),
+                        t.getTravelEnd().toString(),
+                        List.of(t.getTravelTheme1(), t.getTravelTheme2(), t.getTravelTheme3()),
+                        t.getCompanionType()
+                ))
+                .toList();
+    }
+
+    //진행중인 여행
+    public List<TravelSummaryResponse> readAllOngoingTravel(String publicId) {
+        LocalDate today = LocalDate.now(java.time.ZoneId.of("Asia/Seoul"));
+        UserEntity ue = userService.getUserEntityByPublicId(publicId);
+        List<TravelEntity> travels =
+                travelRepository.findByUserAndTravelStartLessThanEqualAndTravelEndGreaterThanEqualOrderByTravelStartAsc(ue,today,today);
 
         return travels.stream()
                 .map(t -> new TravelSummaryResponse(

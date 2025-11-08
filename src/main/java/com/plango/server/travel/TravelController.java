@@ -34,6 +34,12 @@ public class TravelController {
         return travelService.readAllFinishedTravel(publicId);
     }
 
+    //진행 중인 여행
+    @GetMapping("/read/ongoing/{publicId}")
+    public List<TravelSummaryResponse> readAllOngoingTravel(@PathVariable String publicId) {
+        return travelService.readAllOngoingTravel(publicId);
+    }
+
     //특정 여행 정보 자세하게 보여주기
     @GetMapping("/read/{travelId}")
     public TravelDetailResponse readTravelDetail(@PathVariable String travelId) {

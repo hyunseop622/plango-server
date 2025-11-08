@@ -49,13 +49,13 @@ public class AiTravelMapper {
         - 출력은 오직 JSON만. 마크다운/설명/추가 텍스트 금지.
         - OUTPUT SCHEMA의 구조·필드명·자료형을 정확히 따름. **정해진 필드 외 추가 금지(additional properties not allowed)**.
         - 입력 startDate~endDate의 ‘포함 범위’ 일수 == 출력 days.length (반드시 동일).
-        - 각 day의 courses는 상황에 맞게 생성(보통 3~6개 권장).
+        - 각 day의 courses는 theme1~3에 맞고 입력된 userMbti에 맞게 생성하세요. (3~6개 권장)
         - 각 course는 모두 필수:
           - order: 1부터 시작, 1씩 증가(1..N), 중복/누락 금지.
           - locationName: 빈 문자열 금지.
-          - lat/lng: **확실할 때만 수치**, 불확실하면 **null(추측 금지)**.
+          - lat/lng: **확실한 수치만 대입합니다, null은 금지됩니다. google map 검색을 통해 꼭 값을 넣어주세요.**
           - note: 짧은 설명, 모르면 "".
-          - theme: theme1~3 중 가장 적합, 없으면 "".
+          - theme: theme1~3 중 가장 적합한 theme 하나를 넣습니다. 모르겠으면 theme1~3중 랜덤으로 대입합니다.
           - howLong: 분 단위 정수(보통 60~180 권장).
         - 대문자 코드 등 입력의 표기 규칙을 그대로 따름.
         - 날짜 문자열이나 dayIndex는 출력하지 않음(서버가 처리).

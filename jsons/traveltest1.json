@@ -1,9 +1,9 @@
 {
-  "userPublicId": "3f9f65fd-a9e7-4dc6-a3c7-bcb9a1125cd8",
+  "userPublicId": "test",
   "travelType": "DOMESTIC",
   "travelDest": "제주도",
-  "startDate": "2025-11-01",
-  "endDate": "2025-11-03",
+  "startDate": "2025-11-05",
+  "endDate": "2025-11-07",
   "themes": ["힐링", "맛집", "자연"],
   "companionType": "FRIEND"
 }
