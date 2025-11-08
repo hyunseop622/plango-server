@@ -13,18 +13,17 @@ import java.util.Optional;
 public interface TravelRepository extends JpaRepository<TravelEntity, Long> {
     List<TravelEntity> findByUser(UserEntity user);
 
-    // 앞으로 올 여행 (start > today) → 가까운 일정부터
-    //유저 엔티티로 찾는데...
-    // TravelStart를 기준으로 AFTER or BEFORE
-    // ORDER BY TRAVELSTART ASC 오름차순
+    // 시작일이 지금보다 미래
     List<TravelEntity> findByUserAndTravelStartAfterOrderByTravelStartAsc(
-            UserEntity user, LocalDate today
-    );
+            UserEntity user, LocalDate today);
 
-    // 이미 지난 여행 (end < today) → 최근에 다녀온 순서로
-    List<TravelEntity> findByUserAndTravelEndBeforeOrderByTravelStartDesc(
-            UserEntity user, LocalDate today
-    );
+    // 진행중 - 시작일 <= 오늘 <= 종료일
+    List<TravelEntity> findByUserAndTravelStartLessThanEqualAndTravelEndGreaterThanEqualOrderByTravelStartAsc(
+            UserEntity user, LocalDate today1, LocalDate today2);
+
+    // 종료일이 과거인 경우
+    List<TravelEntity> findByUserAndTravelEndBeforeOrderByTravelEndDesc(
+            UserEntity user, LocalDate today);
 
     @EntityGraph(attributePaths = {"travelDays", "travelDays.courses"})
     Optional<TravelEntity> findByTravelId(Long travelId);
